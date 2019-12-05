@@ -8,8 +8,12 @@ solutions: $(SOLS)
 
 $(OUTS): %.hs: templ/%B.hs
 	@echo "=> $@"
-	@./Impl/strip 2 < $< > $@
+	@mkdir -p $(USER)
+	@cp W*Test.hs $(USER)/
+	@./Impl/strip 2 < $< > $(USER)/$@
 
 $(SOLS): %Sol.hs: templ/%B.hs
 	@echo "=> $@"
-	@./Impl/strip 1 < $< > $@
+	@mkdir -p $(USER)
+	@cp W*Test.hs $(USER)/
+	@./Impl/strip 1 < $< > $(USER)/$@
