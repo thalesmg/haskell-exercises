@@ -9,11 +9,11 @@ solutions: $(SOLS)
 $(OUTS): %.hs: templ/%B.hs
 	@echo "=> $@"
 	@mkdir -p $(USER)
-	@cp W*Test.hs $(USER)/
+	@cp -r W*Test.hs Impl/ $(USER)/
 	@./Impl/strip 2 < $< > $(USER)/$@
 
 $(SOLS): %Sol.hs: templ/%B.hs
 	@echo "=> $@"
 	@mkdir -p $(USER)
-	@cp W*Test.hs $(USER)/
+	@cp -r W*Test.hs Impl/ $(USER)/
 	@./Impl/strip 1 < $< > $(USER)/$@
