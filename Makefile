@@ -9,11 +9,11 @@ solutions: $(SOLS)
 $(OUTS): %.hs: templ/%B.hs
 	@echo "=> $@"
 	@mkdir -p $(USER)
-	@cp -r W*Test.hs Impl/ $(USER)/
+	@cp -r W*Test.hs Impl/ stack.yaml haskell-exercises.cabal $(USER)/
 	@./Impl/strip 2 < $< > $(USER)/$@
 
 $(SOLS): %Sol.hs: templ/%B.hs
 	@echo "=> $@"
 	@mkdir -p $(USER)
-	@cp -r W*Test.hs Impl/ $(USER)/
+	@cp -r W*Test.hs Impl/ stack.yaml haskell-exercises.cabal $(USER)/
 	@./Impl/strip 1 < $< > $(USER)/$@
