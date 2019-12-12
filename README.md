@@ -7,23 +7,9 @@ Quick Start
 If these instructions don't work for you, see the
 [instructions for using cabal instead of stack](README.cabal.md)
 
-1. Install [Stack](https://www.haskellstack.org/)
-
-2. Download dependencies by running
-
-        $ stack build
-
-2. Then check you can actually run the tests with:
-
-        $ stack runhaskell W0Test.hs
-
-    This should print `Everything seems to be OK!`. If you see any errors,
-    you might not have a problem with your Haskell installation.
-
-3. Generate the exercise templates (files `W*.hs`):
-
-        $ make
-
+1. `make`
+2. `cd $USER`
+3. `stack build`
 4. Now you can edit `W1.hs` and see how well you did by running
 
         $ stack runhaskell W1Test.hs
