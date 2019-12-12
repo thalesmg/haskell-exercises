@@ -13,20 +13,21 @@ module W1 where
 -- should take one argument and return it multiplied by two.
 
 double :: Integer -> Integer
-double x = undefined
+double x = x + x
 
 -- Ex 3: define the function quadruple that uses the function double
 -- from the previous exercise to return its argument multiplied by
 -- four.
 
 quadruple :: Integer -> Integer
-quadruple x = undefined
+quadruple x = double (double x)
 
 -- Ex 4: define the function poly2. It should take four arguments of
 -- type Double, a, b, c, and x and return a*x^2+b*x+c. Give poly2 a
 -- type signature, i.e. poly2 :: something.
 
-poly2 = undefined
+poly2 :: Double -> Double -> Double -> Double -> Double
+poly2 a b c x = a * x ^ 2 + b * x + c
 
 -- Ex 5: define the function eeny that returns "eeny" for even inputs
 -- and "meeny" for odd inputs.
@@ -34,7 +35,9 @@ poly2 = undefined
 -- Ps. have a look at the built in function "even"
 
 eeny :: Integer -> String
-eeny = undefined
+eeny a = if even a
+  then "eeny"
+  else "meeny"
 
 -- Ex 6: fizzbuzz! Define the a function fizzbuzz that returns "Fizz"
 -- for numbers divisible by 3, "Buzz" for numbers divisible by 5, and
@@ -43,7 +46,27 @@ eeny = undefined
 --
 -- You can use the function mod to compute modulo.
 
-fizzbuzz = undefined
+fizzbuzz :: Integer -> String
+fizzbuzz x =
+  let
+    divisible_by_3 = x `mod` 3 == 0
+    divisible_by_5 = x `mod` 5 == 0
+  in
+    case (divisible_by_3, divisible_by_5) of
+      (True, True) -> "FizzBuzz"
+      (True, False) -> "Fizz"
+      (False, True) -> "Buzz"
+      _ -> ""
+
+--  if mod x 3 == 0 && mod x 5 == 0
+--    then "FizzBuzz"
+--    else
+--      if mod x 3 == 0
+--        then "Fizz"
+--        else
+--          if mod x 5 == 0
+--            then "Buzz"
+--            else ""
 
 -- Ex 7: define a function isZero that returns True if it is given an
 -- Integer that is 0, and False otherwise. Give isZero a type signature.
@@ -52,14 +75,24 @@ fizzbuzz = undefined
 --
 -- Ps. the type of booleans in haskell is Bool
 
-isZero = undefined
+isZero :: Integer -> Bool
+isZero 0 = True
+isZero _ = False
+
+-- isZero x =
+--   case x of
+--     0 -> True
+--     _ -> False
 
 -- Ex 8: implement using recursion a function sumTo such that
 --   sumTo n
 -- computes the sum 1+2+...+n
 
 sumTo :: Integer -> Integer
-sumTo = undefined
+sumTo n =
+  if n > 0
+    then sumTo (n - 1) + n
+    else n
 
 -- Ex 9: power n k should compute n to the power k (i.e. n^k)
 -- Use recursion.
