@@ -144,10 +144,12 @@ tribonacci n = go 3 2 1 1
 -- common divisor: http://en.wikipedia.org/wiki/Euclidean_algorithm
 
 myGcd :: Integer -> Integer -> Integer
-myGcd m n = undefined
-  -- | m == n = m
-  -- | m > n  = myGcd (m `div` n) n
-  -- | otherwise  = myGcd (n `div` m) m
+myGcd m 1 = 1
+myGcd 1 m = 1
+myGcd m n
+  | m == n     = m
+  | m > n      = myGcd (m - n) n
+  | otherwise  = myGcd (n - m) m
 
 -- Ex 14: The Haskell Prelude (standard library) defines the type
 -- Ordering with values LT, GT and EQ. You try out Ordering by
@@ -166,7 +168,11 @@ myGcd m n = undefined
 -- 2. Within even and odd numbers the ordering is normal
 
 funnyCompare :: Int -> Int -> Ordering
-funnyCompare = undefined
+funnyCompare x y =
+  case (odd x, odd y) of
+    (False, True) -> LT
+    (True, False) -> GT
+    (_, _) -> compare x y
 
 -- Ex 15: Implement the function funnyMin that returns the minimum of
 -- its two arguments, according to the ordering implemented by
@@ -177,7 +183,10 @@ funnyCompare = undefined
 -- expression or define a helper function.
 
 funnyMin :: Int -> Int -> Int
-funnyMin = undefined
+funnyMin x y = case funnyCompare x y of
+  GT -> y
+  LT -> x
+  EQ -> x
 
 -- Ex 16: implement the recursive function pyramid that returns
 -- strings like this:
@@ -193,7 +202,15 @@ funnyMin = undefined
 -- * you'll need a (recursive) helper function
 
 pyramid :: Integer -> String
-pyramid = undefined
+pyramid 0 = "0"
+pyramid n = goUp 0 ""
+  where
+    goUp m acc
+      | m < n     = goUp (m + 1) (acc ++ show m ++ ",")
+      | otherwise = goDown m acc
+    goDown m acc
+      | m > 0  = goDown (m - 1) (acc ++ show m ++ ",")
+      | otherwise = acc ++ "0"
 
 -- Ex 17: implement the function smallestDivisor that returns the
 -- smallest number (greater than 1) that divides the given number.
