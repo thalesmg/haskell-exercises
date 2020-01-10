@@ -225,7 +225,12 @@ pyramid n = goUp 0 ""
 -- remember this in the next exercise!
 
 smallestDivisor :: Integer -> Integer
-smallestDivisor = undefined
+smallestDivisor n = go 2
+  where
+    go k
+      | k == n       = n
+      | mod n k == 0 = k
+      | otherwise    = go (k + 1)
 
 -- Ex 18: implement a function isPrime that checks if the given number
 -- is a prime number. Use the function smallestDivisor.
@@ -233,11 +238,15 @@ smallestDivisor = undefined
 -- Ps. 0 and 1 are not prime numbers
 
 isPrime :: Integer -> Bool
-isPrime = undefined
+isPrime n | n < 2 = False
+isPrime n = smallestDivisor n == n
 
 -- Ex 19: implement a function nextPrime that returns the first prime
 -- number that comes after the given number. Use the function isPrime
 -- you just defined.
 
 nextPrime :: Integer -> Integer
-nextPrime = undefined
+nextPrime n =
+  if isPrime (n + 1)
+    then n + 1
+    else nextPrime (n + 1)
