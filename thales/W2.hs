@@ -28,19 +28,23 @@ import Data.Char
 -- Ex 1: Define the constant years, that is a list of the values 1982,
 -- 2004 and 2012 in this order.
 
-years = undefined
+years = [1982, 2004, 2012]
 
 -- Ex 2: define the function measure that for an empty list returns -1
 -- and for other lists returns the length of the list.
 
 measure :: [String] -> Int
-measure ss = undefined
+measure [] = -1
+measure ss = length ss
 
 -- Ex 3: define the function takeFinal, which returns the n last
 -- elements of the given list.
 
 takeFinal :: Int -> [Int] -> [Int]
-takeFinal n xs = undefined
+takeFinal _ [] = []
+takeFinal 0 _  = []
+takeFinal n xs = let l = length xs
+                 in drop (l - n) xs
 
 -- Ex 4: remove the nth element of the given list. More precisely,
 -- return a list that is identical to the given list except the nth
@@ -55,7 +59,7 @@ takeFinal n xs = undefined
 -- The [a] in the type signature means "a list of any type"
 
 remove :: Int -> [a] -> [a]
-remove i xs = undefined
+remove i xs = take i xs ++ drop (i + 1) xs
 
 -- Ex 5: substring i n s should return the length n substring of s
 -- starting at index i.
@@ -63,7 +67,7 @@ remove i xs = undefined
 -- Remember that strings are lists!
 
 substring :: Int -> Int -> String -> String
-substring i n s = undefined
+substring i n = take n . drop i
 
 -- Ex 6: implement the function mymax that takes as argument a
 -- measuring function (of type a -> Int) and two values (of type a).
@@ -79,7 +83,11 @@ substring i n s = undefined
 --  mymax head   [1,2,3] [4,5]  ==>  [4,5]
 
 mymax :: (a -> Int) -> a -> a -> a
-mymax measure a b = undefined
+mymax measure a b =
+  case compare (measure a) (measure b) of
+    EQ -> a
+    LT -> b
+    GT -> a
 
 -- Ex 7: countSorted receives a list of strings and returns a count of
 -- how many of the strings are in alphabetical order (i.e. how many of
@@ -88,7 +96,9 @@ mymax measure a b = undefined
 -- Remember the functions length, filter and sort
 
 countSorted :: [String] -> Int
-countSorted ss = undefined
+countSorted ss = length
+               . filter (\s -> s == sort s)
+               $ ss
 
 -- Ex 8: Implement a function funny, that
 --  - takes in a list of strings
@@ -103,7 +113,11 @@ countSorted ss = undefined
 --  - intercalate               from the module Data.List
 
 funny :: [String] -> String
-funny strings = undefined
+funny strings =
+  let
+    strings' = filter (\s -> length s > 5) strings
+  in
+    map toUpper $ intercalate " " strings'
 
 -- Ex 9: implement quicksort. Quicksort is a recursive sorting
 -- algorithm that works like this.
@@ -119,7 +133,10 @@ funny strings = undefined
 -- PS. yes if you want to nit-pick this isn't really quicksort :)
 
 quicksort :: [Int] -> [Int]
-quicksort xs = undefined
+quicksort [] = []
+quicksort [x] = [x]
+quicksort (x:xs) =
+  quicksort (filter (<= x) xs) ++ [x] ++ quicksort (filter (> x) xs)
 
 -- Ex 10: powers k max should return all the powers of k that are less
 -- than or equal to max. For example:
