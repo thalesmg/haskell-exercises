@@ -305,7 +305,16 @@ map2 f (x:xs) (y:ys) = f x y : map2 f xs ys
 -- your interpreter correctly but weirdly :(
 
 interpreter :: [String] -> [String]
-interpreter commands = undefined
+interpreter commands = reverse $ fst $ foldl interpret ([], (0, 0)) commands
+  where
+    interpret :: ([String], (Int, Int)) -> String -> ([String], (Int, Int))
+    interpret (out, (a, b)) "incA" = (out, (a + 1, b))
+    interpret (out, (a, b)) "incB" = (out, (a, b + 1))
+    interpret (out, (a, b)) "decA" = (out, (a - 1, b))
+    interpret (out, (a, b)) "decB" = (out, (a, b - 1))
+    interpret (out, (a, b)) "printA" = ((show a : out), (a, b))
+    interpret (out, (a, b)) "printB" = ((show b : out), (a, b))
+    interpret acc _ = acc
 
 -- Ex 20: write a function that finds the n first squares (numbers of
 -- the form x*x) that start and end with the same digit.
@@ -315,4 +324,9 @@ interpreter commands = undefined
 -- Remember, the function show transforms a number to a string.
 
 squares :: Int -> [Integer]
-squares n = undefined
+squares n = take n $ [n2
+                     | m <- [1..]
+                     , let n2 = m*m
+                     , let showN2 = show n2
+                     , head showN2 == last showN2
+                     ]
