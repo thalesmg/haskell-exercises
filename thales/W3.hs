@@ -14,7 +14,8 @@ module W3 where
 -- Remember that integer division can be done with the div function.
 
 safeDiv :: Integer -> Integer -> Maybe Integer
-safeDiv x y = undefined
+safeDiv _ 0 = Nothing
+safeDiv x y = Just (div x y)
 
 -- Ex 2: another variant of safe division. This time a succesful
 -- division should be returned as
@@ -24,7 +25,8 @@ safeDiv x y = undefined
 -- (replace 1234 with the value of x).
 
 eitherDiv :: Integer -> Integer -> Either String Integer
-eitherDiv x y = undefined
+eitherDiv x 0 = Left (show x ++ "/0")
+eitherDiv x y = Right (div x y)
 
 -- Ex 3: implement the function mapMaybe, which works a bit like a
 -- combined map & filter.
@@ -47,7 +49,11 @@ eitherDiv x y = undefined
 --   ==> []
 
 mapMaybe :: (a -> Maybe b) -> [a] -> [b]
-mapMaybe f xs = undefined
+mapMaybe _ [] = []
+mapMaybe f (x:xs) =
+  case f x of
+    Nothing -> mapMaybe f xs
+    Just r -> r : mapMaybe f xs
 
 -- Ex 4: define the function classify that takes a list of Either a b
 -- values and returns a list of the Left values and a list of the
@@ -62,7 +68,11 @@ mapMaybe f xs = undefined
 --     ==> ([1,0],[True,False])
 
 classify :: [Either a b] -> ([a],[b])
-classify es = undefined
+classify es = go es ([], [])
+  where
+    go [] (ls, rs) = (reverse ls, reverse rs)
+    go (Left l : xs) (ls, rs) = go xs (l:ls, rs)
+    go (Right r : xs) (ls, rs) = go xs (ls, r:rs)
 
 -- Ex 5: define a datatype Person, which should contain the age (an
 -- Int) and the name (a String) of a person.
@@ -70,28 +80,28 @@ classify es = undefined
 -- Also define a Person value fred, and the functions getAge, getname,
 -- setAge and setName (see below).
 
-data Person = PersonUndefined
+data Person = MkPerson Int String
   deriving Show
 
 -- fred is a person whose name is Fred and age is 90
 fred :: Person
-fred = undefined
+fred = MkPerson 90 "Fred"
 
 -- getName returns the name of the person
 getName :: Person -> String
-getName p = undefined
+getName (MkPerson _ n) = n
 
 -- getAge returns the age of the person
 getAge :: Person -> Int
-getAge p = undefined
+getAge (MkPerson a _) = a
 
 -- setName takes a person and returns a new person with the name changed
 setName :: String -> Person -> Person
-setName name p = undefined
+setName name (MkPerson a _) = MkPerson a name
 
 -- setAge does likewise for age
 setAge :: Int -> Person -> Person
-setAge age p = undefined
+setAge age (MkPerson _ n) = MkPerson age n
 
 
 -- Ex 6: define a datatype TwoCounters which contains two Int
@@ -105,27 +115,27 @@ setAge age p = undefined
 -- getB (incB (incA zeros))
 --   ==> 1
 
-data TwoCounters = Undefined
+data TwoCounters = MkTwoCounters Int Int
 
 -- zeros is a TwoCounters value with both counters initialized to 0
 zeros :: TwoCounters
-zeros = undefined
+zeros = MkTwoCounters 0 0
 
 -- getA returns the value of the "A" counter
 getA :: TwoCounters -> Int
-getA tc = undefined
+getA (MkTwoCounters a _) = a
 
 -- getB returns the value of the "B" counter
 getB :: TwoCounters -> Int
-getB tc = undefined
+getB (MkTwoCounters _ b) = b
 
 -- incA increases the value of the "A" counter by one
 incA :: TwoCounters -> TwoCounters
-incA tc = undefined
+incA (MkTwoCounters a b) = MkTwoCounters (succ a) b
 
 -- incB does likewise for the "B" counter
 incB :: TwoCounters -> TwoCounters
-incB tc = undefined
+incB (MkTwoCounters a b) = MkTwoCounters a (succ b)
 
 -- Ex 7: define a datatype UpDown that represents a counter that can
 -- either be in incresing or decreasing mode. Also implement the
