@@ -98,7 +98,9 @@ sumTo n =
 -- Use recursion.
 
 power :: Integer -> Integer -> Integer
-power = undefined
+power n 0 = 1
+power 0 k = 0
+power n k = n * power n (k - 1)
 
 -- Ex 10: ilog2 n should be the number of times you can halve the
 -- integer n (rounding down) before you get 1.
@@ -107,7 +109,10 @@ power = undefined
 -- division.
 
 ilog2 :: Integer -> Integer
-ilog2 = undefined
+ilog2 n
+  | n <= 1 = 0
+ilog2 2 = 1
+ilog2 n = 1 + ilog2 (n `div` 2)
 
 -- Ex 11: compute binomial coefficients using recursion. Binomial
 -- coefficients are defined by the following equations:
@@ -119,7 +124,9 @@ ilog2 = undefined
 -- Hint! pattern matching is your friend.
 
 binomial :: Integer -> Integer -> Integer
-binomial = undefined
+binomial n 0 = 1
+binomial 0 k | k > 0 = 0
+binomial n k = binomial (n - 1) k + binomial (n - 1) (k - 1)
 
 -- Ex 12: The tribonacci numbers are defined by the equations
 --
@@ -132,13 +139,23 @@ binomial = undefined
 -- computes T(n). You'll probably want to define a helper function.
 
 tribonacci :: Integer -> Integer
-tribonacci = undefined
+tribonacci n | n < 1 = 0
+tribonacci 1 = 1
+tribonacci 2 = 1
+tribonacci 3 = 2
+tribonacci n = let
+    m = n - 1
+  in
+    tribonacci (m) + tribonacci (m - 1) + tribonacci (m - 2)
 
 -- Ex 13: implement the euclidean algorithm for finding the greatest
 -- common divisor: http://en.wikipedia.org/wiki/Euclidean_algorithm
 
 myGcd :: Integer -> Integer -> Integer
-myGcd = undefined
+myGcd a 0 = a
+myGcd a b
+  | a < b     = myGcd b a
+  | otherwise = myGcd b (a `mod` b)
 
 -- Ex 14: The Haskell Prelude (standard library) defines the type
 -- Ordering with values LT, GT and EQ. You try out Ordering by
@@ -157,7 +174,11 @@ myGcd = undefined
 -- 2. Within even and odd numbers the ordering is normal
 
 funnyCompare :: Int -> Int -> Ordering
-funnyCompare = undefined
+funnyCompare a b =
+  case (odd a, odd b) of
+  (True, False) -> GT
+  (False, True) -> LT
+  (_, _) -> compare a b
 
 -- Ex 15: Implement the function funnyMin that returns the minimum of
 -- its two arguments, according to the ordering implemented by
@@ -168,7 +189,11 @@ funnyCompare = undefined
 -- expression or define a helper function.
 
 funnyMin :: Int -> Int -> Int
-funnyMin = undefined
+funnyMin a b =
+  case funnyCompare a b of
+  GT -> b
+  LT -> a
+  _ -> a
 
 -- Ex 16: implement the recursive function pyramid that returns
 -- strings like this:
@@ -184,7 +209,12 @@ funnyMin = undefined
 -- * you'll need a (recursive) helper function
 
 pyramid :: Integer -> String
-pyramid = undefined
+pyramid 0 = show 0
+pyramid n = pyramid_helper n (show n)
+
+pyramid_helper :: Integer -> String -> String
+pyramid_helper 0 previous = previous
+pyramid_helper n previous = pyramid_helper (n - 1) (show (n - 1) ++ "," ++ previous ++ "," ++ show (n - 1))
 
 -- Ex 17: implement the function smallestDivisor that returns the
 -- smallest number (greater than 1) that divides the given number.
@@ -199,7 +229,17 @@ pyramid = undefined
 -- remember this in the next exercise!
 
 smallestDivisor :: Integer -> Integer
-smallestDivisor = undefined
+smallestDivisor 0 = 1
+smallestDivisor 1 = 1
+smallestDivisor n = checkSmallestDivisor n n n
+
+checkSmallestDivisor :: Integer -> Integer -> Integer -> Integer
+checkSmallestDivisor number 1 lastSucessifull = lastSucessifull
+
+checkSmallestDivisor number currentDivisor lastSucessifull =
+  if number `mod` currentDivisor == 0
+    then checkSmallestDivisor number (currentDivisor - 1) currentDivisor
+    else checkSmallestDivisor number (currentDivisor - 1) lastSucessifull
 
 -- Ex 18: implement a function isPrime that checks if the given number
 -- is a prime number. Use the function smallestDivisor.
@@ -207,11 +247,16 @@ smallestDivisor = undefined
 -- Ps. 0 and 1 are not prime numbers
 
 isPrime :: Integer -> Bool
-isPrime = undefined
+isPrime n
+  | n < 2     = False
+  | otherwise = (smallestDivisor (n) == n)
 
 -- Ex 19: implement a function nextPrime that returns the first prime
 -- number that comes after the given number. Use the function isPrime
 -- you just defined.
 
 nextPrime :: Integer -> Integer
-nextPrime = undefined
+nextPrime n =
+  if isPrime (n + 1)
+  then n + 1
+  else nextPrime n + 1
